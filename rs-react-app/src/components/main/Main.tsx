@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import './Main.css';
 import { Planet } from '../../models/planet';
-import Error from '../error/Error';
+import Error from '../error/ErrorModule';
 
 type MyProps = {
   data: Planet[] | undefined;
@@ -28,10 +28,10 @@ export default class Main extends Component<MyProps> {
               <div className="wertical-column">
                 <div className="itemsName">
                   <div className="item">
-                    <h3>Item Name</h3>
+                    <h3>Planet name</h3>
                   </div>
                   <div className="item">
-                    <h3>Item description</h3>
+                    <h3>Terrain type</h3>
                   </div>
                 </div>
                 {this.props.data?.map((planet, index) => {
