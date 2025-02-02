@@ -1,10 +1,12 @@
 import { Component } from 'react';
 import './Main.css';
 import { Planet } from '../../models/planet';
+import Error from '../error/Error';
 
 type MyProps = {
-  data: Planet[];
+  data: Planet[] | undefined;
   isLoading: boolean;
+  isError: boolean;
 };
 
 export default class Main extends Component<MyProps> {
@@ -17,7 +19,9 @@ export default class Main extends Component<MyProps> {
       <div>
         <div className="mainContainer">
           <h2>Results</h2>
-          {this.props.isLoading ? (
+          {this.props.isError ? (
+            <Error />
+          ) : this.props.isLoading ? (
             <img src=".\src\assets\ring-resize.svg" alt="loading..."></img>
           ) : (
             <div className="Items">
@@ -30,7 +34,7 @@ export default class Main extends Component<MyProps> {
                     <h3>Item description</h3>
                   </div>
                 </div>
-                {this.props.data.map((planet, index) => {
+                {this.props.data?.map((planet, index) => {
                   return (
                     <div key={index}>
                       <hr />
