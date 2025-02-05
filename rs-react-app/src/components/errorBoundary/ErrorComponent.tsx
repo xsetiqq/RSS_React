@@ -1,23 +1,16 @@
-import { Component } from 'react';
+import { useState } from 'react';
 
-export default class ErrorComponent extends Component<
-  object,
-  { throwError: boolean }
-> {
-  constructor(props: object) {
-    super(props);
-    this.state = { throwError: false };
-  }
-
-  handleClick = () => {
-    this.setState({ throwError: true });
+const ErrorComponent = () => {
+  const [throwError, setThrowError] = useState(false);
+  const handleClick = () => {
+    setThrowError(true);
   };
 
-  render() {
-    if (this.state.throwError) {
-      throw new Error('This is a test error!');
-    }
-
-    return <button onClick={this.handleClick}>Throw Error</button>;
+  if (throwError) {
+    throw new Error('This is a test error!');
   }
-}
+
+  return <button onClick={handleClick}>Throw Error</button>;
+};
+
+export default ErrorComponent;

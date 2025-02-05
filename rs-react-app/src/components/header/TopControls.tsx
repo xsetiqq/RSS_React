@@ -1,58 +1,43 @@
-import { ChangeEvent, Component } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import './TopControls.css';
 
-interface SearchState {
-  query: string;
-}
 interface TopControlsProps {
   getApiData: (searchTerm: string) => Promise<void>;
 }
 
-export default class Topcontrols extends Component<
-  TopControlsProps,
-  SearchState
-> {
-  constructor(props: TopControlsProps) {
-    super(props);
-    const lastQuery = localStorage.getItem('lastSearch') || '';
-    this.state = {
-      query: lastQuery,
-    };
-    console.log(this.props);
-  }
+const Topcontrols = ({ getApiData }: TopControlsProps) => {
+  const lastQuery = localStorage.getItem('lastSearch') || '';
+  const [query, setQuery] = useState(lastQuery);
 
-  componentDidMount(): void {
-    this.props.getApiData(this.state.query);
-  }
+  useEffect(() => {
+    getApiData(query);
+  });
 
-  handleSearch = (): void => {
-    const { query } = this.state;
+  const handleSearch = (): void => {
     if (query.trim() === '') return;
-
     localStorage.setItem('lastSearch', query);
-    this.setState({ query });
-    this.props.getApiData(query);
+    getApiData(query);
   };
 
-  handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    this.setState({ query: event.target.value });
+  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
+    setQuery(event.target.value);
   };
 
-  render() {
-    return (
-      <div className="container">
-        <h2>Top controls</h2>
-        <div className="TopControls">
-          <input
-            type="search"
-            value={this.state.query}
-            onChange={this.handleChange}
-            placeholder={this.state.query}
-            className="search-input"
-          />
-          <button onClick={this.handleSearch}>Search</button>
-        </div>
+  return (
+    <div className="container">
+      <h2>Top controls</h2>
+      <div className="TopControls">
+        <input
+          type="search"
+          value={query}
+          onChange={handleChange}
+          placeholder="Search"
+          className="search-input"
+        />
+        <button onClick={handleSearch}>Search</button>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
+export default Topcontrols;
