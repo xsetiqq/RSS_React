@@ -10,10 +10,6 @@ type MyProps = {
 };
 
 export default class Main extends Component<MyProps> {
-  componentDidUpdate() {
-    console.log(this.props.data);
-  }
-
   render() {
     return (
       <div>

@@ -8,13 +8,9 @@ import ErrorBoundary from './components/errorBoundary/ErrorBoundary';
 class App extends Component {
   state = { data: [], isLoading: false, isError: false };
 
-  componentDidUpdate(): void {
-    console.log(this.state);
-  }
   getApiData = async (searchTerm: string) => {
     this.setState({ data: this.state.data, isLoading: true, isError: false });
     const data = await fetchData(searchTerm);
-    console.log(data);
     this.setState({ data: data.data, isLoading: false, isError: data.isError });
   };
 

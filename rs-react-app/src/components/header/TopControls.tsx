@@ -18,7 +18,6 @@ export default class Topcontrols extends Component<
     this.state = {
       query: lastQuery,
     };
-    console.log(this.props);
   }
 
   componentDidMount(): void {
