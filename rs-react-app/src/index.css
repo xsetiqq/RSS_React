@@ -11,12 +11,10 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  
 }
 
 body {
   margin: 0;
-
 }
 
 button {
@@ -30,7 +28,3 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
-
-
-
-

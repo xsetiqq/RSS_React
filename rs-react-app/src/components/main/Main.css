@@ -1,40 +1,38 @@
-
-.mainContainer{
-    width: 100%;
-    margin: 0 auto;
+.mainContainer {
+  width: 100%;
+  margin: 0 auto;
 }
 .Names-Description {
-    display: flex;
-    gap: 10px;
-    background-color: rgba(57, 55, 52, 0.863);
-    border-radius: 3px;
-    padding: 20px;
-    
-    display: flex;
-    gap: 20%;
-    justify-content: space-around;
-    
+  display: flex;
+  gap: 10px;
+  background-color: rgba(57, 55, 52, 0.863);
+  border-radius: 3px;
+  padding: 20px;
+
+  display: flex;
+  gap: 20%;
+  justify-content: space-around;
 }
 .Items {
-    display: flex;
+  display: flex;
 }
 .wertical-column {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 .itemsName {
-    display: flex;
-    justify-content: space-around;
-    width: 100%;
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
 }
 hr {
-    size: 4;
-    width: 100%;
+  size: 4;
+  width: 100%;
 }
 .item {
-    display: flex;
-    width: 50%;
-    align-items: flex-start;
-    padding-left: 15%;
+  display: flex;
+  width: 50%;
+  align-items: flex-start;
+  padding-left: 15%;
 }
