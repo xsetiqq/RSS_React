@@ -10,8 +10,9 @@ const Topcontrols = ({ getApiData }: TopControlsProps) => {
   const [query, setQuery] = useState(lastQuery);
 
   useEffect(() => {
-    getApiData(query);
-  });
+    getApiData(lastQuery);
+    console.log('ss');
+  }, [getApiData, lastQuery]);
 
   const handleSearch = (): void => {
     if (query.trim() === '') return;

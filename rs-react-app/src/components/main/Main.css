@@ -34,5 +34,6 @@ hr {
   display: flex;
   width: 50%;
   align-items: flex-start;
-  padding-left: 15%;
+  padding-left: 10%;
+  gap: 30px;
 }

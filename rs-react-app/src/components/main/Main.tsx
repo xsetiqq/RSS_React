@@ -1,9 +1,9 @@
 import './Main.css';
-import { Planet } from '../../models/planet';
+import { Person } from '../../models/person';
 import Error from '../error/ErrorModule';
 
 type MyProps = {
-  data: Planet[] | undefined;
+  data: Person[] | undefined;
   isLoading: boolean;
   isError: boolean;
 };
@@ -22,19 +22,27 @@ const Main = ({ data, isError, isLoading }: MyProps) => {
             <div className="wertical-column">
               <div className="itemsName">
                 <div className="item">
-                  <h3>Planet name</h3>
+                  <h3>Persone</h3>
                 </div>
                 <div className="item">
-                  <h3>Terrain type</h3>
+                  <h3>Height</h3>
+                </div>
+                <div className="item">
+                  <h3>Gender</h3>
                 </div>
               </div>
-              {data?.map((planet, index) => {
+              {data?.map((person, index) => {
                 return (
                   <div key={index}>
                     <hr />
                     <div className="itemsName">
-                      <div className="item">{planet.name}</div>
-                      <div className="item">{planet.terrain}</div>
+                      <div className="item">{person.name}</div>
+                      <div className="item">
+                        <div>{person.height} cm</div>
+                      </div>
+                      <div className="item">
+                        <div>{person.gender}</div>
+                      </div>
                     </div>
                   </div>
                 );
