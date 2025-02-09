@@ -2,7 +2,8 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import './TopControls.css';
 
 interface TopControlsProps {
-  getApiData: (searchTerm: string) => Promise<void>;
+  getApiData: (searchTerm: string, isResetPage?: boolean) => Promise<void>;
+  setPageStart: () => void;
 }
 
 const Topcontrols = ({ getApiData }: TopControlsProps) => {
@@ -11,13 +12,12 @@ const Topcontrols = ({ getApiData }: TopControlsProps) => {
 
   useEffect(() => {
     getApiData(lastQuery);
-    console.log('ss');
   }, [getApiData, lastQuery]);
 
   const handleSearch = (): void => {
     if (query.trim() === '') return;
     localStorage.setItem('lastSearch', query);
-    getApiData(query);
+    getApiData(query, true);
   };
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {

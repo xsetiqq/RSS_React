@@ -6,6 +6,7 @@ type MyProps = {
   data: Person[] | undefined;
   isLoading: boolean;
   isError: boolean;
+  countPersons: number;
 };
 
 const Main = ({ data, isError, isLoading }: MyProps) => {
@@ -49,7 +50,9 @@ const Main = ({ data, isError, isLoading }: MyProps) => {
               })}
               <hr />
             </div>
-            <div className="itemsDescription"></div>
+            <div className="itemsDescription">
+              asdaasdasdasdasdddddddddddddddddddddddasdaasda asd
+            </div>
           </div>
         )}
       </div>
