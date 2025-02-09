@@ -17,9 +17,16 @@
   display: flex;
 }
 .wertical-column {
+     /* Фиксированная ширина */
+  background-color: #181818; /* Чуть светлее, чем фон */
+  width: 100%;
+  min-width: 70%;
+  border: 2px solid #444;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  width: 100%;
+  height: auto; /* Авто-высота */
+  min-height: 100%; /* Минимум на всю высоту контейнера */
 }
 .itemsName {
   display: flex;

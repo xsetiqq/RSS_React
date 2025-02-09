@@ -1,19 +1,17 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Homepage';
 import NotFound from './pages/NotFoundPage';
-import RightSection from './pages/RightSectionPage';
 import ErrorBoundary from './components/errorBoundary/ErrorBoundary';
 
 const App = () => {
   return (
     <ErrorBoundary>
-      <Router>
+      <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home />}></Route>
           <Route path="*" element={<NotFound />} />
-          <Route path="/details/*" element={<RightSection />}></Route>
         </Routes>
-      </Router>
+      </BrowserRouter>
     </ErrorBoundary>
   );
 };

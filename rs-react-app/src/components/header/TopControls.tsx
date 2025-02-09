@@ -12,7 +12,7 @@ const Topcontrols = ({ getApiData }: TopControlsProps) => {
 
   useEffect(() => {
     getApiData(lastQuery);
-  }, [getApiData, lastQuery]);
+  }, []);
 
   const handleSearch = (): void => {
     if (query.trim() === '') return;

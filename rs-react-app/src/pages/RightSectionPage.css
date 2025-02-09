@@ -1,0 +1,85 @@
+/* Главный контейнер */
+.home-container {
+  display: flex;
+  align-items: flex-start; /* Выровняем верхний край */
+}
+
+/* Левая часть (таблица) */
+.left-section {
+  flex: 1; /* Занимает всё доступное пространство */
+  padding: 20px;
+  background: #181818;
+  color: #fff;
+}
+
+/* Правая панель "Details" */
+.right-section {
+  width: 300px; /* Фиксированная ширина */
+  background-color: #181818; /* Чёрный фон */
+  color: #fff;
+  border-right: 2px solid #444;
+  border-top: 2px solid #444;
+  border-bottom: 2px solid #444;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  height: auto; /* Авто-высота */
+  min-height: 100%; /* Минимум на всю высоту контейнера */
+  border-radius: 2px; /* Округление углов */
+}
+
+/* Заголовок */
+.right-section h2 {
+  font-size: 22px;
+  margin-bottom: 15px;
+  text-align: center;
+  border-bottom: 1px solid #555;
+  padding-bottom: 10px;
+}
+
+/* Контент */
+.details-content {
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.details-content p {
+  margin: 5px 0;
+}
+
+/* Кнопка закрытия */
+.close-btn {
+  align-self: flex-end;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.close-btn:hover {
+  color: #ff5555;
+}
+
+/* Убираем белую полосу */
+html, body {
+  overflow-x: hidden;
+}
+
+/* Медиа-запрос для мобильных устройств */
+@media (max-width: 768px) {
+  .home-container {
+    flex-direction: column;
+  }
+
+  .right-section {
+    width: 100%;
+    height: auto;
+    position: relative;
+    border-left: none;
+    border-top: 1px solid #444;
+    min-height: auto;
+  }
+}
+
