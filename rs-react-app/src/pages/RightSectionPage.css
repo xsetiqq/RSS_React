@@ -63,7 +63,8 @@
 }
 
 /* Убираем белую полосу */
-html, body {
+html,
+body {
   overflow-x: hidden;
 }
 
@@ -82,4 +83,3 @@ html, body {
     min-height: auto;
   }
 }
-

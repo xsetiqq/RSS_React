@@ -17,7 +17,7 @@
   display: flex;
 }
 .wertical-column {
-     /* Фиксированная ширина */
+  /* Фиксированная ширина */
   background-color: #181818; /* Чуть светлее, чем фон */
   width: 100%;
   min-width: 70%;

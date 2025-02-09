@@ -4,7 +4,7 @@ import ErrorComponent from '../components/errorBoundary/ErrorComponent';
 import { Person } from '../models/person';
 import './App.css';
 import Pagination from '../components/main/Pagination';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { fetchData } from '../utils/api';
 import { useSearchParams } from 'react-router-dom';
 
@@ -16,23 +16,28 @@ const Home: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [, setSearchParams] = useSearchParams();
 
-  const getApiData = async (searchTerm: string, isResetPage?: boolean) => {
-    const firstPage = 1;
-    const page = isResetPage ? firstPage : currentPage;
+  const getApiData = useCallback(
+    async (searchTerm: string, isResetPage?: boolean) => {
+      const firstPage = 1;
+      const page = isResetPage ? firstPage : currentPage;
 
-    if (isResetPage) {
-      setPageStart();
-    }
+      if (isResetPage) {
+        setPageStart();
+      }
 
-    setisLoading(true);
-    setisError(false);
-    const result = await fetchData(searchTerm, page);
-    setCountPersons(result.countPersons);
-    setSearchParams({ search: searchTerm, page: String(currentPage) });
-    setData(result.data);
-    setisLoading(false);
-    setisError(result.isError);
-  };
+      setisLoading(true);
+      setisError(false);
+      const result = await fetchData(searchTerm, page);
+      console.log(result);
+      setCountPersons(result.countPersons);
+      setSearchParams({ search: searchTerm, page: String(currentPage) });
+      setData(result.data);
+      setisLoading(false);
+      setisError(result.isError);
+    },
+    [currentPage]
+  );
+
   const setPageStart = () => {
     setCurrentPage(1);
   };
