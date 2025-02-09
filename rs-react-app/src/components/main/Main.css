@@ -1,0 +1,46 @@
+.mainContainer {
+  width: 100%;
+  margin: 0 auto;
+}
+.Names-Description {
+  display: flex;
+  gap: 10px;
+  background-color: rgba(57, 55, 52, 0.863);
+  border-radius: 3px;
+  padding: 20px;
+
+  display: flex;
+  gap: 20%;
+  justify-content: space-around;
+}
+.Items {
+  display: flex;
+}
+.wertical-column {
+  /* Фиксированная ширина */
+  background-color: #181818; /* Чуть светлее, чем фон */
+  width: 100%;
+  min-width: 70%;
+  border: 2px solid #444;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  height: auto; /* Авто-высота */
+  min-height: 100%; /* Минимум на всю высоту контейнера */
+}
+.itemsName {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+hr {
+  size: 4;
+  width: 100%;
+}
+.item {
+  display: flex;
+  width: 50%;
+  align-items: flex-start;
+  padding-left: 10%;
+  gap: 30px;
+}
