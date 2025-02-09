@@ -2,7 +2,6 @@ import React from 'react';
 import Topcontrols from '../components/header/TopControls';
 import Main from '../components/main/Main';
 import ErrorComponent from '../components/errorBoundary/ErrorComponent';
-import ErrorBoundary from '../components/errorBoundary/ErrorBoundary';
 import { Person } from '../models/person';
 import './App.css';
 import Pagination from '../components/main/Pagination';
@@ -43,7 +42,7 @@ const Home: React.FC = () => {
     setCurrentPage(1);
   };
   return (
-    <ErrorBoundary>
+    <>
       <Topcontrols getApiData={getApiData} setPageStart={setPageStart} />
       <Main
         data={data}
@@ -57,7 +56,7 @@ const Home: React.FC = () => {
         setCurrentPage={setCurrentPage}
       />
       <ErrorComponent />
-    </ErrorBoundary>
+    </>
   );
 };
 
