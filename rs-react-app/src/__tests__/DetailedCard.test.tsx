@@ -1,26 +1,49 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import RightSectionPage from '../pages/RightSectionPage';
+import { MemoryRouter } from 'react-router-dom';
+import RightSection from '../pages/RightSectionPage';
 
-test('показывает индикатор загрузки', () => {
-  render(<RightSectionPage isLoading={true} />);
-  expect(screen.getByText('Загрузка...')).toBeInTheDocument();
+const detailData = {
+  name: 'Luke Skywalker',
+  gender: 'male',
+  mass: 77,
+  hair_color: 'blond',
+  eye_color: 'blue',
+  url: '/people/1/',
+};
+
+// Adding a mock for setSearchParams before using it
+const mockSetSearchParams = vi.fn();
+
+vi.mock('react-router-dom', async () => {
+  const actual =
+    await vi.importActual<typeof import('react-router-dom')>(
+      'react-router-dom'
+    );
+  return {
+    ...actual,
+    useSearchParams: () => [new URLSearchParams(), mockSetSearchParams],
+  };
 });
 
-test('отображает детальную информацию', () => {
-  const detailData = { name: 'Detailed Card', gender: 'Male' };
-  render(<RightSectionPage isLoading={false} detailData={detailData} />);
-  expect(screen.getByText('Detailed Card')).toBeInTheDocument();
-});
-
-test('кнопка закрытия скрывает компонент', () => {
-  const mockClose = jest.fn();
+test('renders the "Details" heading', () => {
   render(
-    <RightSectionPage
-      isLoading={false}
-      detailData={{ name: 'Test' }}
-      closeDetails={mockClose}
-    />
+    <MemoryRouter>
+      <RightSection detailData={detailData} />
+    </MemoryRouter>
   );
-  fireEvent.click(screen.getByText('Закрыть'));
-  expect(mockClose).toHaveBeenCalled();
+
+  expect(screen.getByText('Details')).toBeInTheDocument();
+});
+
+test('clicking the close button triggers URL change', () => {
+  render(
+    <MemoryRouter>
+      <RightSection detailData={detailData} />
+    </MemoryRouter>
+  );
+
+  fireEvent.click(screen.getByText('×'));
+
+  // Checking if mockSetSearchParams was called
+  expect(mockSetSearchParams).toHaveBeenCalled();
 });
