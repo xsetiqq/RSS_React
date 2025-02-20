@@ -1,10 +1,9 @@
 import './Main.css';
-import { DetailPerson, Person } from '../../models/person';
+import { Person } from '../../models/person';
 import Error from '../error/ErrorModule';
 import { useSearchParams } from 'react-router-dom';
 import RightSection from '../../pages/RightSectionPage';
-import { fetchDetailsData } from '../../utils/api';
-import { useState } from 'react';
+import { useGetPersonDetailsQuery } from '../../store/apiSlice';
 
 type MyProps = {
   data: Person[] | undefined;
@@ -14,42 +13,36 @@ type MyProps = {
 };
 
 const Main = ({ data, isError, isLoading }: MyProps) => {
-  const [detailData, setdetailData] = useState<DetailPerson>({
-    name: '',
-    mass: 0,
-    hair_color: '',
-    url: '',
-    eye_color: '',
-    gender: '',
-  });
-  const [isDetailLoading, setisDetailLoading] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const detailsId = searchParams.get('details');
 
-  const handleItemClick = async (url: string) => {
+  const {
+    data: detailData,
+    isLoading: isDetailLoading,
+    error,
+  } = useGetPersonDetailsQuery(detailsId ? `people/${detailsId}/` : '', {
+    skip: !detailsId,
+  });
+
+  const handleItemClick = (url: string) => {
     const newSearchParams = new URLSearchParams(searchParams);
+
     if (newSearchParams.get('details')) {
       newSearchParams.delete('details');
       setSearchParams(newSearchParams);
       return;
     }
-    setisDetailLoading(true);
-    const result = await fetchDetailsData(url);
-    console.log(result);
-    if (!result.data) return;
-    const splittedUrl = result.data.url.split('/');
+
+    const splittedUrl = url.split('/');
     const id = splittedUrl[splittedUrl.length - 2];
-    console.log(id);
-    setdetailData(result.data);
     newSearchParams.set('details', String(id));
     setSearchParams(newSearchParams);
-    setisDetailLoading(false);
   };
 
   return (
     <div className="mainContainer">
       <h2>Results</h2>
-      {isError ? (
+      {isError || error ? (
         <Error />
       ) : isLoading || isDetailLoading ? (
         <img src=".\src\assets\ring-resize.svg" alt="loading..." />
@@ -67,6 +60,7 @@ const Main = ({ data, isError, isLoading }: MyProps) => {
                 <h3>Gender</h3>
               </div>
             </div>
+
             {data?.map((person, index) => (
               <div key={index} onClick={() => handleItemClick(person.url)}>
                 <hr />
@@ -83,7 +77,7 @@ const Main = ({ data, isError, isLoading }: MyProps) => {
             ))}
             <hr />
           </div>
-          {detailsId && <RightSection detailData={detailData} />}
+          {detailsId && detailData && <RightSection detailData={detailData} />}
         </div>
       )}
     </div>
