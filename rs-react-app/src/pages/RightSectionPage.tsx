@@ -3,10 +3,11 @@ import './RightSectionPage.css';
 import { DetailPerson } from '../models/person';
 
 type MyProps = {
-  detailData: DetailPerson;
+  detailData: DetailPerson | undefined;
+  isDetailLoading: boolean;
 };
 
-const RightSection = ({ detailData }: MyProps) => {
+const RightSection = ({ detailData, isDetailLoading }: MyProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const closeDetails = () => {
@@ -14,6 +15,30 @@ const RightSection = ({ detailData }: MyProps) => {
     newSearchParams.delete('details');
     setSearchParams(newSearchParams);
   };
+
+  if (isDetailLoading) {
+    return (
+      <div className="right-section">
+        <button className="close-btn" onClick={closeDetails}>
+          ×
+        </button>
+        <h2>Details</h2>
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (!detailData) {
+    return (
+      <div className="right-section">
+        <button className="close-btn" onClick={closeDetails}>
+          ×
+        </button>
+        <h2>Details</h2>
+        <p>No data available</p>
+      </div>
+    );
+  }
 
   return (
     <div className="right-section">

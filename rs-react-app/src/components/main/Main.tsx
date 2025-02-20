@@ -4,6 +4,9 @@ import Error from '../error/ErrorModule';
 import { useSearchParams } from 'react-router-dom';
 import RightSection from '../../pages/RightSectionPage';
 import { useGetPersonDetailsQuery } from '../../store/apiSlice';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../../store/store';
+import { selectItem, unselectItem } from '../../store/selectedItemsSlice';
 
 type MyProps = {
   data: Person[] | undefined;
@@ -15,6 +18,11 @@ type MyProps = {
 const Main = ({ data, isError, isLoading }: MyProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const detailsId = searchParams.get('details');
+  const dispatch = useDispatch();
+
+  const selectedItems = useSelector(
+    (state: RootState) => state.selectedItems.selected
+  );
 
   const {
     data: detailData,
@@ -39,6 +47,22 @@ const Main = ({ data, isError, isLoading }: MyProps) => {
     setSearchParams(newSearchParams);
   };
 
+  const handleCheckboxChange = (person: Person) => {
+    const isSelected = selectedItems.some((item) => item.id === person.url);
+    if (isSelected) {
+      dispatch(unselectItem(person.url));
+    } else {
+      dispatch(
+        selectItem({
+          id: person.url,
+          name: person.name,
+          description: '',
+          url: person.url,
+        })
+      );
+    }
+  };
+
   return (
     <div className="mainContainer">
       <h2>Results</h2>
@@ -51,7 +75,10 @@ const Main = ({ data, isError, isLoading }: MyProps) => {
           <div className="wertical-column">
             <div className="itemsName">
               <div className="item">
-                <h3>Persone</h3>
+                <h3>Select</h3>
+              </div>
+              <div className="item">
+                <h3>Person</h3>
               </div>
               <div className="item">
                 <h3>Height</h3>
@@ -62,14 +89,34 @@ const Main = ({ data, isError, isLoading }: MyProps) => {
             </div>
 
             {data?.map((person, index) => (
-              <div key={index} onClick={() => handleItemClick(person.url)}>
+              <div key={index} className="itemRow">
                 <hr />
                 <div className="itemsName">
-                  <div className="item">{person.name}</div>
                   <div className="item">
+                    <input
+                      type="checkbox"
+                      checked={selectedItems.some(
+                        (item) => item.id === person.url
+                      )}
+                      onChange={() => handleCheckboxChange(person)}
+                    />
+                  </div>
+                  <div
+                    className="item"
+                    onClick={() => handleItemClick(person.url)}
+                  >
+                    {person.name}
+                  </div>
+                  <div
+                    className="item"
+                    onClick={() => handleItemClick(person.url)}
+                  >
                     <div>{person.height} cm</div>
                   </div>
-                  <div className="item">
+                  <div
+                    className="item"
+                    onClick={() => handleItemClick(person.url)}
+                  >
                     <div>{person.gender}</div>
                   </div>
                 </div>
@@ -77,7 +124,12 @@ const Main = ({ data, isError, isLoading }: MyProps) => {
             ))}
             <hr />
           </div>
-          {detailsId && detailData && <RightSection detailData={detailData} />}
+          {detailsId && (
+            <RightSection
+              detailData={detailData}
+              isDetailLoading={isDetailLoading}
+            />
+          )}
         </div>
       )}
     </div>
