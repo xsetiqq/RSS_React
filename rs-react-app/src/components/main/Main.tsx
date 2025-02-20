@@ -7,6 +7,7 @@ import { useGetPersonDetailsQuery } from '../../store/apiSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store/store';
 import { selectItem, unselectItem } from '../../store/selectedItemsSlice';
+import Flyout from './Flyout';
 
 type MyProps = {
   data: Person[] | undefined;
@@ -64,75 +65,78 @@ const Main = ({ data, isError, isLoading }: MyProps) => {
   };
 
   return (
-    <div className="mainContainer">
-      <h2>Results</h2>
-      {isError || error ? (
-        <Error />
-      ) : isLoading || isDetailLoading ? (
-        <img src=".\src\assets\ring-resize.svg" alt="loading..." />
-      ) : (
-        <div className="Items">
-          <div className="wertical-column">
-            <div className="itemsName">
-              <div className="item">
-                <h3>Select</h3>
-              </div>
-              <div className="item">
-                <h3>Person</h3>
-              </div>
-              <div className="item">
-                <h3>Height</h3>
-              </div>
-              <div className="item">
-                <h3>Gender</h3>
-              </div>
-            </div>
-
-            {data?.map((person, index) => (
-              <div key={index} className="itemRow">
-                <hr />
-                <div className="itemsName">
-                  <div className="item">
-                    <input
-                      type="checkbox"
-                      checked={selectedItems.some(
-                        (item) => item.id === person.url
-                      )}
-                      onChange={() => handleCheckboxChange(person)}
-                    />
-                  </div>
-                  <div
-                    className="item"
-                    onClick={() => handleItemClick(person.url)}
-                  >
-                    {person.name}
-                  </div>
-                  <div
-                    className="item"
-                    onClick={() => handleItemClick(person.url)}
-                  >
-                    <div>{person.height} cm</div>
-                  </div>
-                  <div
-                    className="item"
-                    onClick={() => handleItemClick(person.url)}
-                  >
-                    <div>{person.gender}</div>
-                  </div>
+    <>
+      <div className="mainContainer">
+        <h2>Results</h2>
+        {isError || error ? (
+          <Error />
+        ) : isLoading || isDetailLoading ? (
+          <img src=".\src\assets\ring-resize.svg" alt="loading..." />
+        ) : (
+          <div className="Items">
+            <div className="wertical-column">
+              <div className="itemsName">
+                <div className="item">
+                  <h3>Select</h3>
+                </div>
+                <div className="item">
+                  <h3>Person</h3>
+                </div>
+                <div className="item">
+                  <h3>Height</h3>
+                </div>
+                <div className="item">
+                  <h3>Gender</h3>
                 </div>
               </div>
-            ))}
-            <hr />
+
+              {data?.map((person, index) => (
+                <div key={index} className="itemRow">
+                  <hr />
+                  <div className="itemsName">
+                    <div className="item">
+                      <input
+                        type="checkbox"
+                        checked={selectedItems.some(
+                          (item) => item.id === person.url
+                        )}
+                        onChange={() => handleCheckboxChange(person)}
+                      />
+                    </div>
+                    <div
+                      className="item"
+                      onClick={() => handleItemClick(person.url)}
+                    >
+                      {person.name}
+                    </div>
+                    <div
+                      className="item"
+                      onClick={() => handleItemClick(person.url)}
+                    >
+                      <div>{person.height} cm</div>
+                    </div>
+                    <div
+                      className="item"
+                      onClick={() => handleItemClick(person.url)}
+                    >
+                      <div>{person.gender}</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+              <hr />
+            </div>
+            {detailsId && (
+              <RightSection
+                detailData={detailData}
+                isDetailLoading={isDetailLoading}
+              />
+            )}
           </div>
-          {detailsId && (
-            <RightSection
-              detailData={detailData}
-              isDetailLoading={isDetailLoading}
-            />
-          )}
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+      <Flyout />
+    </>
   );
 };
 
