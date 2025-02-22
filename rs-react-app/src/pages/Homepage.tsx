@@ -1,60 +1,69 @@
-import Topcontrols from '../components/header/TopControls';
+import TopControls from '../components/header/TopControls';
 import Main from '../components/main/Main';
 import ErrorComponent from '../components/errorBoundary/ErrorComponent';
-import { Person } from '../models/person';
-import './App.css';
 import Pagination from '../components/main/Pagination';
-import { useCallback, useState } from 'react';
-import { fetchData } from '../utils/api';
 import { useSearchParams } from 'react-router-dom';
+import { useGetPeopleQuery } from '../store/apiSlice';
+import { useState } from 'react';
+import './Homepage.css';
 
 const Home: React.FC = () => {
-  const [data, setData] = useState<Person[] | undefined>([]);
-  const [isLoading, setisLoading] = useState(false);
-  const [isError, setisError] = useState(false);
-  const [countPersons, setCountPersons] = useState<number>(0);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const getApiData = useCallback(
-    async (searchTerm: string, isResetPage?: boolean) => {
-      const firstPage = 1;
-      const page = isResetPage ? firstPage : currentPage;
+  // Получаем параметры из URL
+  const searchTerm = searchParams.get('search') || '';
+  const pageParam = searchParams.get('page');
+  const initialPage = pageParam ? Number(pageParam) : 1;
 
-      if (isResetPage) {
-        setPageStart();
-      }
+  const [currentPage, setCurrentPage] = useState(initialPage);
 
-      setisLoading(true);
-      setisError(false);
-      const result = await fetchData(searchTerm, page);
-      console.log(result);
-      setCountPersons(result.countPersons);
-      setSearchParams({ search: searchTerm, page: String(currentPage) });
-      setData(result.data);
-      setisLoading(false);
-      setisError(result.isError);
-    },
-    [currentPage]
-  );
+  // Запрос списка персонажей через RTK Query
+  const { data, isLoading, isFetching, isError } = useGetPeopleQuery({
+    searchTerm,
+    page: currentPage,
+  });
 
-  const setPageStart = () => {
-    setCurrentPage(1);
+  const countPersons = data?.countPersons || 0;
+
+  // Функция поиска (сбрасывает страницу на 1)
+  const handleSearch = (newSearchTerm: string) => {
+    if (newSearchTerm !== searchTerm) {
+      setSearchParams({ search: newSearchTerm, page: '1' });
+      setCurrentPage(1);
+    }
+  };
+
+  // Функция переключения страниц
+  const handlePageChange = (newPage: number) => {
+    if (newPage !== currentPage) {
+      setCurrentPage(newPage);
+      setSearchParams({ search: searchTerm, page: String(newPage) });
+    }
   };
 
   return (
     <>
-      <Topcontrols getApiData={getApiData} setPageStart={setPageStart} />
-      <Main
-        data={data}
-        isLoading={isLoading}
-        isError={isError}
-        countPersons={countPersons}
+      <TopControls
+        getApiData={handleSearch}
+        setPageStart={() => handlePageChange(1)}
       />
+
+      {/* Показываем спиннер, если данные загружаются */}
+      {isLoading || isFetching ? (
+        <img src=".\src\assets\ring-resize.svg" alt="loading..." />
+      ) : (
+        <Main
+          data={data?.data} // Персонажи
+          isLoading={isLoading}
+          isError={isError}
+          countPersons={countPersons}
+        />
+      )}
+
       <Pagination
         countPersons={countPersons}
         currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
+        setCurrentPage={handlePageChange}
       />
       <ErrorComponent />
     </>

@@ -63,7 +63,7 @@ const Main = ({ data, isError, isLoading }: MyProps) => {
       );
     }
   };
-
+  console.log(isLoading);
   return (
     <>
       <div className="mainContainer">
@@ -126,11 +126,16 @@ const Main = ({ data, isError, isLoading }: MyProps) => {
               ))}
               <hr />
             </div>
-            {detailsId && (
-              <RightSection
-                detailData={detailData}
-                isDetailLoading={isDetailLoading}
-              />
+
+            {isLoading ? (
+              <img src=".\src\assets\ring-resize.svg" alt="loading..." />
+            ) : (
+              detailsId && (
+                <RightSection
+                  detailData={detailData}
+                  isDetailLoading={isDetailLoading}
+                />
+              )
             )}
           </div>
         )}
