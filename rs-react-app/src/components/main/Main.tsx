@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store/store';
 import { selectItem, unselectItem } from '../../store/selectedItemsSlice';
 import Flyout from './Flyout';
+import { useState } from 'react';
 
 type MyProps = {
   data: Person[] | undefined;
@@ -17,6 +18,10 @@ type MyProps = {
 };
 
 const Main = ({ data, isError, isLoading }: MyProps) => {
+  const [isLightTheme] = useState(() => {
+    return localStorage.getItem('theme') === 'light';
+  });
+
   const [searchParams, setSearchParams] = useSearchParams();
   const detailsId = searchParams.get('details');
   const dispatch = useDispatch();
@@ -63,7 +68,6 @@ const Main = ({ data, isError, isLoading }: MyProps) => {
       );
     }
   };
-  console.log(isLoading);
   return (
     <>
       <div className="mainContainer">
@@ -74,7 +78,7 @@ const Main = ({ data, isError, isLoading }: MyProps) => {
           <img src=".\src\assets\ring-resize.svg" alt="loading..." />
         ) : (
           <div className="Items">
-            <div className="wertical-column">
+            <div className={`wertical-column ${isLightTheme ? 'light' : ''}`}>
               <div className="itemsName">
                 <div className="item">
                   <h3>Select</h3>

@@ -10,14 +10,12 @@ import './Homepage.css';
 const Home: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Получаем параметры из URL
   const searchTerm = searchParams.get('search') || '';
   const pageParam = searchParams.get('page');
   const initialPage = pageParam ? Number(pageParam) : 1;
 
   const [currentPage, setCurrentPage] = useState(initialPage);
 
-  // Запрос списка персонажей через RTK Query
   const { data, isLoading, isFetching, isError } = useGetPeopleQuery({
     searchTerm,
     page: currentPage,
@@ -25,7 +23,6 @@ const Home: React.FC = () => {
 
   const countPersons = data?.countPersons || 0;
 
-  // Функция поиска (сбрасывает страницу на 1)
   const handleSearch = (newSearchTerm: string) => {
     if (newSearchTerm !== searchTerm) {
       setSearchParams({ search: newSearchTerm, page: '1' });
@@ -33,7 +30,6 @@ const Home: React.FC = () => {
     }
   };
 
-  // Функция переключения страниц
   const handlePageChange = (newPage: number) => {
     if (newPage !== currentPage) {
       setCurrentPage(newPage);
@@ -47,13 +43,11 @@ const Home: React.FC = () => {
         getApiData={handleSearch}
         setPageStart={() => handlePageChange(1)}
       />
-
-      {/* Показываем спиннер, если данные загружаются */}
       {isLoading || isFetching ? (
         <img src=".\src\assets\ring-resize.svg" alt="loading..." />
       ) : (
         <Main
-          data={data?.data} // Персонажи
+          data={data?.data}
           isLoading={isLoading}
           isError={isError}
           countPersons={countPersons}

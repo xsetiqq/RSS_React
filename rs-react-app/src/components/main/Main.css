@@ -17,16 +17,27 @@
   display: flex;
 }
 .wertical-column {
-  /* Фиксированная ширина */
-  background-color: #181818; /* Чуть светлее, чем фон */
+
+  background-color: #181818; 
   width: 100%;
   min-width: 70%;
   border: 2px solid #444;
   padding: 20px;
   display: flex;
   flex-direction: column;
-  height: auto; /* Авто-высота */
-  min-height: 100%; /* Минимум на всю высоту контейнера */
+  height: auto;
+  min-height: 100%; 
+}
+.light {
+  background-color: #ffffff;
+  color: black;
+}
+
+button.light-button {
+  background-color: white;
+  color: black;
+  border: 2px solid black;
+  transition: background 0.3s ease, color 0.3s ease, border 0.3s ease;
 }
 .itemsName {
   display: flex;
