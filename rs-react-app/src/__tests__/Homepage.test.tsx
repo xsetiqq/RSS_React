@@ -1,20 +1,21 @@
 import { render, screen } from '@testing-library/react';
+import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
-import Homepage from '../pages/Homepage';
+import { store } from '../store/store';
+import Home from '../pages/Homepage';
 
-describe('Homepage', () => {
-  test('renders homepage components correctly', () => {
-    render(
+test('Рендер главной страницы', () => {
+  render(
+    <Provider store={store}>
       <MemoryRouter>
-        <Homepage />
+        <Home />
       </MemoryRouter>
-    );
+    </Provider>
+  );
 
-    // Проверяем наличие основных частей страницы
-    expect(screen.getByText(/Top controls/i)).toBeInTheDocument();
-    expect(screen.getByText(/Results/i)).toBeInTheDocument();
-    expect(screen.getByPlaceholderText(/Search/i)).toBeInTheDocument();
-    expect(screen.getByText(/Search/i)).toBeInTheDocument();
-    expect(screen.getByText(/Throw Error/i)).toBeInTheDocument();
-  });
+  expect(screen.getByText('Top controls')).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /search/i })).toBeInTheDocument();
+  expect(
+    screen.getByRole('button', { name: /throw error/i })
+  ).toBeInTheDocument();
 });

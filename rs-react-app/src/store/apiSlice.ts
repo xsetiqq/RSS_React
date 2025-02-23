@@ -6,12 +6,10 @@ interface PeopleResponse {
   results: Person[];
 }
 
-// Создаём API slice
 export const apiSlice = createApi({
   reducerPath: 'api',
-  baseQuery: fetchBaseQuery({ baseUrl: 'https://swapi.dev/api/' }), // Базовый URL API
+  baseQuery: fetchBaseQuery({ baseUrl: 'https://swapi.dev/api/' }),
   endpoints: (builder) => ({
-    // Получение списка людей
     getPeople: builder.query<
       { data: Person[]; countPersons: number },
       { searchTerm: string; page: number }
@@ -29,12 +27,10 @@ export const apiSlice = createApi({
       }),
     }),
 
-    // Получение деталей персонажа
     getPersonDetails: builder.query<DetailPerson, string>({
-      query: (url) => url.replace('https://swapi.dev/api/', ''), // Убираем базовый URL из запроса
+      query: (url) => url.replace('https://swapi.dev/api/', ''),
     }),
   }),
 });
 
-// Экспортируем хуки для использования в компонентах
 export const { useGetPeopleQuery, useGetPersonDetailsQuery } = apiSlice;
