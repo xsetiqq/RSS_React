@@ -3,11 +3,10 @@ import { waitFor } from '@testing-library/react';
 import { setupApiStore } from '../utils/testUtils';
 import { apiSlice } from '../store/apiSlice';
 
-describe('RTK Query API Test (без MSW)', () => {
+describe('RTK Query API Test ', () => {
   const storeRef = setupApiStore(apiSlice);
 
   test('useGetPeopleQuery делает запрос', async () => {
-    // Простой мок fetch
     global.fetch = vi.fn(() =>
       Promise.resolve({
         json: () =>
@@ -27,7 +26,6 @@ describe('RTK Query API Test (без MSW)', () => {
       apiSlice.endpoints.getPeople.useQuery({ searchTerm: 'Luke', page: 1 })
     );
 
-    // ✅ Ждём, пока fetch вызовется
     await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(1));
   });
 });

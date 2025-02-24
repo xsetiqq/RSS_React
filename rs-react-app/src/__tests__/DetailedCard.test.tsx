@@ -11,7 +11,6 @@ const detailData = {
   url: '/people/1/',
 };
 
-// Adding a mock for setSearchParams before using it
 const mockSetSearchParams = vi.fn();
 
 vi.mock('react-router-dom', async () => {
@@ -44,6 +43,5 @@ test('clicking the close button triggers URL change', () => {
 
   fireEvent.click(screen.getByText('×'));
 
-  // Checking if mockSetSearchParams was called
   expect(mockSetSearchParams).toHaveBeenCalled();
 });

@@ -164,13 +164,11 @@ test('Рендер RightSection без данных', () => {
     { name: 'Luke Skywalker', height: '172', gender: 'male', url: '1' },
   ];
 
-  // Мокаем useSearchParams, чтобы вернуть detailsId
   vi.mocked(useSearchParams).mockReturnValue([
     new URLSearchParams('details=1'),
     vi.fn(),
   ]);
 
-  // Мокаем useGetPersonDetailsQuery, чтобы вернуть отсутствие данных
   vi.mocked(useGetPersonDetailsQuery).mockReturnValue({
     data: null,
     isLoading: false,
@@ -191,9 +189,7 @@ test('Рендер RightSection без данных', () => {
     </Provider>
   );
 
-  // Проверяем, что заголовок "Details" отображается
   expect(screen.getByText('Details')).toBeInTheDocument();
 
-  // Проверяем, что отображается текст "No data available"
   expect(screen.getByText('No data available')).toBeInTheDocument();
 });

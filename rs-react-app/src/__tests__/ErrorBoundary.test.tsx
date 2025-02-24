@@ -17,7 +17,7 @@ describe('ErrorBoundary', () => {
   });
 
   test('renders fallback UI when an error occurs', () => {
-    vi.spyOn(console, 'error').mockImplementation(() => {}); // Отключаем ошибки в консоли
+    vi.spyOn(console, 'error').mockImplementation(() => {});
 
     render(
       <ErrorBoundary>
@@ -25,9 +25,8 @@ describe('ErrorBoundary', () => {
       </ErrorBoundary>
     );
 
-    // Проверяем наличие fallback UI с частичным текстом
     expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
 
-    vi.restoreAllMocks(); // Восстанавливаем консоль после теста
+    vi.restoreAllMocks();
   });
 });

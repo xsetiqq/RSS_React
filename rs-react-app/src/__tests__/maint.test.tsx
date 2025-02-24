@@ -1,7 +1,6 @@
 import { test, expect, vi } from 'vitest';
 import { createRoot } from 'react-dom/client';
 
-// Мокаем createRoot
 vi.mock('react-dom/client', () => ({
   createRoot: vi.fn(() => ({
     render: vi.fn(),
@@ -9,8 +8,8 @@ vi.mock('react-dom/client', () => ({
 }));
 
 test('main.tsx монтируется без ошибок', async () => {
-  document.body.innerHTML = '<div id="root"></div>'; // Добавляем root
-  await import('../main'); // Импортируем main.tsx
+  document.body.innerHTML = '<div id="root"></div>';
+  await import('../main');
 
-  expect(createRoot).toHaveBeenCalled(); // Проверяем вызов createRoot
+  expect(createRoot).toHaveBeenCalled();
 });
