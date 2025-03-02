@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import RightSection from '../pages/RightSectionPage';
+import RightSection from '../components/main/RightSectionPage';
 
 const detailData = {
   name: 'Luke Skywalker',

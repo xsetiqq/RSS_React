@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store/store';
 import { unselectAll } from '../../store/selectedItemsSlice';
-import './Flyout.css';
+import styles from './Flyout.module.css';
 
 const Flyout: React.FC = () => {
   const dispatch = useDispatch();
@@ -47,7 +47,7 @@ const Flyout: React.FC = () => {
   };
 
   return (
-    <div className="flyout active">
+    <div className={`${styles.flyout} ${styles.active}`}>
       <p>{selectedItems.length} items selected</p>
       <button onClick={handleUnselectAll}>Unselect All</button>
       <button onClick={handleDownload}>Download</button>

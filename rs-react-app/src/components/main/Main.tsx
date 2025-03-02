@@ -1,14 +1,15 @@
-import './Main.css';
+'use client';
+import styles from './Main.module.css';
 import { Person } from '../../models/person';
 import Error from '../error/ErrorModule';
-import { useSearchParams } from 'react-router-dom';
-import RightSection from '../../pages/RightSectionPage';
+import RightSection from './RightSectionPage';
 import { useGetPersonDetailsQuery } from '../../store/apiSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store/store';
 import { selectItem, unselectItem } from '../../store/selectedItemsSlice';
 import Flyout from './Flyout';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 type MyProps = {
   data: Person[] | undefined;
@@ -18,14 +19,31 @@ type MyProps = {
 };
 
 const Main = ({ data, isError, isLoading }: MyProps) => {
-  const [isLightTheme] = useState(() => {
-    return localStorage.getItem('theme') === 'light';
-  });
+  const searchParams = useSearchParams();
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const detailsId = searchParams.get('details');
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.has('details')) {
+      params.delete('details'); // ✅ Удаляем `details` при первом рендере
+      window.history.replaceState({}, '', `?${params.toString()}`); // ✅ Заменяем URL без `details`
+    }
+  }, []);
+
+  const [detailsId, setDetailsId] = useState<string | null>(
+    searchParams.get('details')
+  );
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setDetailsId(new URLSearchParams(window.location.search).get('details'));
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
   const dispatch = useDispatch();
-
   const selectedItems = useSelector(
     (state: RootState) => state.selectedItems.selected
   );
@@ -39,18 +57,15 @@ const Main = ({ data, isError, isLoading }: MyProps) => {
   });
 
   const handleItemClick = (url: string) => {
-    const newSearchParams = new URLSearchParams(searchParams);
-
-    if (newSearchParams.get('details')) {
-      newSearchParams.delete('details');
-      setSearchParams(newSearchParams);
-      return;
-    }
-
     const splittedUrl = url.split('/');
     const id = splittedUrl[splittedUrl.length - 2];
-    newSearchParams.set('details', String(id));
-    setSearchParams(newSearchParams);
+
+    const params = new URLSearchParams(window.location.search);
+    params.set('details', id);
+
+    window.history.pushState({}, '', `?${params.toString()}`);
+    setDetailsId(id); // ✅ Обновляем состояние, чтобы компонент ререндерился
+    window.dispatchEvent(new PopStateEvent('popstate'));
   };
 
   const handleCheckboxChange = (person: Person) => {
@@ -68,37 +83,38 @@ const Main = ({ data, isError, isLoading }: MyProps) => {
       );
     }
   };
+
   return (
     <>
-      <div className="mainContainer">
+      <div className={styles.mainContainer}>
         <h2>Results</h2>
         {isError || error ? (
           <Error />
         ) : isLoading || isDetailLoading ? (
-          <img src=".\src\assets\ring-resize.svg" alt="loading..." />
+          <img src="/assets/ring-resize.svg" alt="loading..." />
         ) : (
-          <div className="Items">
-            <div className={`wertical-column ${isLightTheme ? 'light' : ''}`}>
-              <div className="itemsName">
-                <div className="item">
+          <div className={styles.items}>
+            <div className={styles.werticalColumn}>
+              <div className={styles.itemsName}>
+                <div className={styles.item}>
                   <h3>Select</h3>
                 </div>
-                <div className="item">
+                <div className={styles.item}>
                   <h3>Person</h3>
                 </div>
-                <div className="item">
+                <div className={styles.item}>
                   <h3>Height</h3>
                 </div>
-                <div className="item">
+                <div className={styles.item}>
                   <h3>Gender</h3>
                 </div>
               </div>
 
               {data?.map((person, index) => (
-                <div key={index} className="itemRow">
+                <div key={index} className={styles.itemRow}>
                   <hr />
-                  <div className="itemsName">
-                    <div className="item">
+                  <div className={styles.itemsName}>
+                    <div className={styles.item}>
                       <input
                         type="checkbox"
                         checked={selectedItems.some(
@@ -108,19 +124,19 @@ const Main = ({ data, isError, isLoading }: MyProps) => {
                       />
                     </div>
                     <div
-                      className="item"
+                      className={styles.item}
                       onClick={() => handleItemClick(person.url)}
                     >
                       {person.name}
                     </div>
                     <div
-                      className="item"
+                      className={styles.item}
                       onClick={() => handleItemClick(person.url)}
                     >
                       <div>{person.height} cm</div>
                     </div>
                     <div
-                      className="item"
+                      className={styles.item}
                       onClick={() => handleItemClick(person.url)}
                     >
                       <div>{person.gender}</div>
@@ -132,7 +148,7 @@ const Main = ({ data, isError, isLoading }: MyProps) => {
             </div>
 
             {isLoading ? (
-              <img src=".\src\assets\ring-resize.svg" alt="loading..." />
+              <img src="/assets/ring-resize.svg" alt="loading..." />
             ) : (
               detailsId && (
                 <RightSection

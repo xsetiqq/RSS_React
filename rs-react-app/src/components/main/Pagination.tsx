@@ -1,4 +1,4 @@
-import './Pagination.css';
+import styles from './Pagination.module.css';
 
 type MyProps = {
   countPersons: number;
@@ -14,14 +14,14 @@ const Pagination = ({ countPersons, currentPage, setCurrentPage }: MyProps) => {
 
   return (
     <div>
-      <ul className="pagination">
+      <ul className={styles.pagination}>
         {pageNumbers.map((number) => (
           <li
-            className={`page-item ${currentPage === number ? 'active' : ''}`}
+            className={`${styles.pageItem} ${currentPage === number ? styles.active : ''}`}
             key={number}
             onClick={() => setCurrentPage(number)}
           >
-            <button className="pagelink">{number}</button>
+            <button className={styles.pageLink}>{number}</button>
           </li>
         ))}
       </ul>

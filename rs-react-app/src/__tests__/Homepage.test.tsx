@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { store } from '../store/store';
-import Home from '../pages/Homepage';
+import Home from '../../pages';
 
 test('Рендер главной страницы', () => {
   render(

@@ -1,39 +1,44 @@
-import { ChangeEvent, useEffect, useState } from 'react';
-import './TopControls.css';
+'use client';
+import { useState, useEffect } from 'react';
+import styles from './TopControls.module.css';
 
 interface TopControlsProps {
   getApiData: (newSearchTerm: string) => void;
-  setPageStart: () => void;
 }
 
-const Topcontrols = ({ getApiData }: TopControlsProps) => {
-  const lastQuery = localStorage.getItem('lastSearch') || '';
-  const [query, setQuery] = useState(lastQuery);
+const TopControls = ({ getApiData }: TopControlsProps) => {
+  const [query, setQuery] = useState('');
 
   useEffect(() => {
+    const lastQuery = localStorage.getItem('lastSearch') || '';
+    setQuery(lastQuery);
     getApiData(lastQuery);
-  }, [getApiData, lastQuery]);
+  }, [getApiData]);
 
-  const handleSearch = (): void => {
+  const handleSearch = () => {
     if (query.trim() === '') return;
-    localStorage.setItem('lastSearch', query);
-    getApiData(query);
-  };
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    setQuery(event.target.value);
+    localStorage.setItem('lastSearch', query);
+    const params = new URLSearchParams(window.location.search);
+    params.set('search', query);
+    params.set('page', '1'); // ✅ Сбрасываем на первую страницу
+    params.delete('details'); // ✅ Удаляем `details`
+
+    window.history.pushState({}, '', `?${params.toString()}`);
+    getApiData(query); // ✅ Обновляем API-запрос
+    window.dispatchEvent(new PopStateEvent('popstate')); // ✅ Принудительный ререндер
   };
 
   return (
-    <div className="container">
-      <h2>Top controls</h2>
-      <div className="TopControls">
+    <div className={styles.container}>
+      <h2>Top Controls</h2>
+      <div className={styles.topControls}>
         <input
           type="search"
           value={query}
-          onChange={handleChange}
+          onChange={(e) => setQuery(e.target.value)}
           placeholder="Search"
-          className="search-input"
+          className={styles.searchInput}
         />
         <button onClick={handleSearch}>Search</button>
       </div>
@@ -41,4 +46,4 @@ const Topcontrols = ({ getApiData }: TopControlsProps) => {
   );
 };
 
-export default Topcontrols;
+export default TopControls;
