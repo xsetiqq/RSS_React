@@ -16,19 +16,22 @@ type MyProps = {
   isLoading: boolean;
   isError: boolean;
   countPersons: number;
+  getApiData: (newSearchTerm: string) => void;
 };
 
-const Main = ({ data, isError, isLoading }: MyProps) => {
+const Main = ({ data, isError, isLoading, getApiData }: MyProps) => {
   const searchParams = useSearchParams();
+  const searchQuery = searchParams.get('search') || '';
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
+    getApiData(searchQuery);
+  }, [getApiData, searchQuery]);
 
-    if (params.has('details')) {
-      params.delete('details'); // ✅ Удаляем `details` при первом рендере
-      window.history.replaceState({}, '', `?${params.toString()}`); // ✅ Заменяем URL без `details`
+  useEffect(() => {
+    if (searchQuery) {
+      getApiData(searchQuery);
     }
-  }, []);
+  }, [getApiData, searchQuery]);
 
   const [detailsId, setDetailsId] = useState<string | null>(
     searchParams.get('details')
@@ -64,7 +67,7 @@ const Main = ({ data, isError, isLoading }: MyProps) => {
     params.set('details', id);
 
     window.history.pushState({}, '', `?${params.toString()}`);
-    setDetailsId(id); // ✅ Обновляем состояние, чтобы компонент ререндерился
+    setDetailsId(id);
     window.dispatchEvent(new PopStateEvent('popstate'));
   };
 

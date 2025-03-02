@@ -45,14 +45,12 @@ const Home: React.FC = () => {
 
   return (
     <>
-      <TopControls
-        getApiData={handleSearch}
-        setPageStart={() => handlePageChange(1)}
-      />
+      <TopControls getApiData={handleSearch} />
       {isLoading || isFetching ? (
         <img src="/assets/ring-resize.svg" alt="loading..." />
       ) : (
         <Main
+          getApiData={handleSearch}
           data={data?.data}
           isLoading={isLoading}
           isError={isError}

@@ -1,32 +1,44 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import styles from './TopControls.module.css';
 
 interface TopControlsProps {
-  getApiData: (newSearchTerm: string) => void;
+  getApiData: (query: string) => void;
 }
 
 const TopControls = ({ getApiData }: TopControlsProps) => {
   const [query, setQuery] = useState('');
+  const router = useRouter();
 
   useEffect(() => {
-    const lastQuery = localStorage.getItem('lastSearch') || '';
-    setQuery(lastQuery);
-    getApiData(lastQuery);
-  }, [getApiData]);
+    if (typeof window !== 'undefined') {
+      const lastQuery = localStorage.getItem('lastSearch') || '';
+      setQuery(lastQuery);
+      getApiData(lastQuery);
+    }
+  }, []);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newQuery = e.target.value;
+    setQuery(newQuery);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('lastSearch', newQuery);
+    }
+  };
 
   const handleSearch = () => {
     if (query.trim() === '') return;
 
-    localStorage.setItem('lastSearch', query);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('lastSearch', query);
+    }
+
     const params = new URLSearchParams(window.location.search);
     params.set('search', query);
-    params.set('page', '1'); // ✅ Сбрасываем на первую страницу
-    params.delete('details'); // ✅ Удаляем `details`
+    params.set('page', '1');
 
-    window.history.pushState({}, '', `?${params.toString()}`);
-    getApiData(query); // ✅ Обновляем API-запрос
-    window.dispatchEvent(new PopStateEvent('popstate')); // ✅ Принудительный ререндер
+    router.push(`?${params.toString()}`);
   };
 
   return (
@@ -36,7 +48,7 @@ const TopControls = ({ getApiData }: TopControlsProps) => {
         <input
           type="search"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={handleInputChange}
           placeholder="Search"
           className={styles.searchInput}
         />
