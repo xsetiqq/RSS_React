@@ -16,7 +16,6 @@ const TopControls = ({ getApiData }: TopControlsProps) => {
     const storedQuery = localStorage.getItem('lastSearch') || '';
     setQuery(storedQuery);
 
-    // При первом рендере — вызов запроса с текущими параметрами
     const currentPage = Number(searchParams.get('page')) || 1;
     if (storedQuery) {
       getApiData({ searchTerm: storedQuery, page: currentPage });
@@ -28,14 +27,12 @@ const TopControls = ({ getApiData }: TopControlsProps) => {
 
     localStorage.setItem('lastSearch', query);
 
-    // Обновляем URL — сбрасываем на первую страницу
     const params = new URLSearchParams(window.location.search);
     params.set('search', query);
     params.set('page', '1');
 
     router.push(`?${params.toString()}`);
 
-    // Вызываем запрос с новой страницей = 1
     getApiData({ searchTerm: query, page: 1 });
   };
 
