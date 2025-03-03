@@ -1,44 +1,42 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import styles from './TopControls.module.css';
 
 interface TopControlsProps {
-  getApiData: (query: string) => void;
+  getApiData: (params: { searchTerm: string; page: number }) => void;
 }
 
 const TopControls = ({ getApiData }: TopControlsProps) => {
   const [query, setQuery] = useState('');
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const lastQuery = localStorage.getItem('lastSearch') || '';
-      setQuery(lastQuery);
-      getApiData(lastQuery);
+    const storedQuery = localStorage.getItem('lastSearch') || '';
+    setQuery(storedQuery);
+
+    // При первом рендере — вызов запроса с текущими параметрами
+    const currentPage = Number(searchParams.get('page')) || 1;
+    if (storedQuery) {
+      getApiData({ searchTerm: storedQuery, page: currentPage });
     }
   }, []);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newQuery = e.target.value;
-    setQuery(newQuery);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('lastSearch', newQuery);
-    }
-  };
 
   const handleSearch = () => {
     if (query.trim() === '') return;
 
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('lastSearch', query);
-    }
+    localStorage.setItem('lastSearch', query);
 
+    // Обновляем URL — сбрасываем на первую страницу
     const params = new URLSearchParams(window.location.search);
     params.set('search', query);
     params.set('page', '1');
 
     router.push(`?${params.toString()}`);
+
+    // Вызываем запрос с новой страницей = 1
+    getApiData({ searchTerm: query, page: 1 });
   };
 
   return (
@@ -48,7 +46,7 @@ const TopControls = ({ getApiData }: TopControlsProps) => {
         <input
           type="search"
           value={query}
-          onChange={handleInputChange}
+          onChange={(e) => setQuery(e.target.value)}
           placeholder="Search"
           className={styles.searchInput}
         />
