@@ -10,11 +10,15 @@ export default defineConfig({
       reporter: ['text', 'lcov'],
 
       exclude: [
+        'pages/_app.tsx',
         'src/models/person.ts',
         'vite.config.ts',
         'vitest.config.ts',
+        'next.config.mjs',
+        'next-env.d.ts',
         'eslint.config.js',
         'src/vite-env.d.ts',
+        '.next',
       ],
     },
   },

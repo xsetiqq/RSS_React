@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 const Home: React.FC = () => {
-  const searchParams = useSearchParams(); // ✅ Убрали `setSearchParams()`
+  const searchParams = useSearchParams();
   const searchTerm = searchParams?.get('search') || '';
   const pageParam = searchParams?.get('page');
   const initialPage = pageParam ? Number(pageParam) : 1;
@@ -45,7 +45,7 @@ const Home: React.FC = () => {
 
   return (
     <>
-      <TopControls getApiData={handleSearch} />
+      <TopControls getApiData={(params) => handleSearch(params.searchTerm)} />
       {isLoading || isFetching ? (
         <img src="/assets/ring-resize.svg" alt="loading..." />
       ) : (

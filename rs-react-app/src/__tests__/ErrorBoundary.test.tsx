@@ -1,32 +1,51 @@
+import React from 'react';
+import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { vi } from 'vitest';
-import ErrorBoundary from '../components/errorBoundary/ErrorBoundary';
+import ErrorBoundary from '../../src/components/errorBoundary/ErrorBoundary';
 
-const ProblematicComponent = () => {
+// ✅ Компонент, который вызывает ошибку
+const ThrowError = () => {
   throw new Error('Test error');
 };
 
-describe('ErrorBoundary', () => {
-  test('renders children when no error occurs', () => {
+// ✅ Мокаем `console.error`, чтобы не засорять логи
+beforeEach(() => {
+  vi.spyOn(console, 'error').mockImplementation(() => {});
+});
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
+
+describe('ErrorBoundary component', () => {
+  test('renders children without errors', () => {
     render(
       <ErrorBoundary>
-        <p>Content is here</p>
+        <div>Safe Content</div>
       </ErrorBoundary>
     );
-    expect(screen.getByText('Content is here')).toBeInTheDocument();
+
+    expect(screen.getByText('Safe Content')).toBeInTheDocument();
   });
 
-  test('renders fallback UI when an error occurs', () => {
-    vi.spyOn(console, 'error').mockImplementation(() => {});
-
+  test('renders ErrorModule when child throws an error', () => {
     render(
       <ErrorBoundary>
-        <ProblematicComponent />
+        <ThrowError />
       </ErrorBoundary>
     );
 
-    expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
+    // ✅ Теперь проверяем реальный текст ошибки
+    expect(screen.getByText(/Oops! Something went wrong/i)).toBeInTheDocument();
+  });
 
-    vi.restoreAllMocks();
+  test('calls console.error when an error is caught', () => {
+    render(
+      <ErrorBoundary>
+        <ThrowError />
+      </ErrorBoundary>
+    );
+
+    expect(console.error).toHaveBeenCalled();
   });
 });
