@@ -3,12 +3,10 @@ import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import ErrorBoundary from '../../src/components/errorBoundary/ErrorBoundary';
 
-// ✅ Компонент, который вызывает ошибку
 const ThrowError = () => {
   throw new Error('Test error');
 };
 
-// ✅ Мокаем `console.error`, чтобы не засорять логи
 beforeEach(() => {
   vi.spyOn(console, 'error').mockImplementation(() => {});
 });
@@ -35,7 +33,6 @@ describe('ErrorBoundary component', () => {
       </ErrorBoundary>
     );
 
-    // ✅ Теперь проверяем реальный текст ошибки
     expect(screen.getByText(/Oops! Something went wrong/i)).toBeInTheDocument();
   });
 

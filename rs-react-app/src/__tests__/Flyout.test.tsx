@@ -6,26 +6,24 @@ import configureStore from 'redux-mock-store';
 import Flyout from '../../src/components/main/Flyout';
 import { unselectAll } from '../../src/store/selectedItemsSlice';
 
-// ✅ Создаем mock-хранилище для Redux
 const mockStore = configureStore();
 
 describe('Flyout Component', () => {
   let store: any;
 
   beforeEach(() => {
-    vi.clearAllMocks(); // ✅ Очищаем моки перед каждым тестом
+    vi.clearAllMocks();
     store = mockStore({
       selectedItems: {
         selected: [{ id: '1', name: 'Item 1', url: 'http://example.com' }],
       },
     });
 
-    // ✅ Создаем мок для store.dispatch
     store.dispatch = vi.fn();
   });
 
   afterEach(() => {
-    vi.restoreAllMocks(); // ✅ Восстанавливаем оригинальные методы после тестов
+    vi.restoreAllMocks();
   });
 
   test('does not render when no items are selected', () => {
@@ -50,7 +48,6 @@ describe('Flyout Component', () => {
     expect(screen.getByText(/1 items selected/i)).toBeInTheDocument();
     expect(screen.getByText(/Unselect All/i)).toBeInTheDocument();
 
-    // ✅ Берем именно кнопку, а не скрытую ссылку
     const downloadButton = screen.getByRole('button', { name: /Download/i });
     expect(downloadButton).toBeInTheDocument();
   });
