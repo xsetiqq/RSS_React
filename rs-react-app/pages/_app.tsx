@@ -1,7 +1,4 @@
-import '../styles/Error404.css';
-import '../styles/Homepage.css';
 import '../styles/index.css';
-import '../styles/App.css';
 import { Provider } from 'react-redux';
 import { store } from '../src/store/store';
 import ErrorBoundary from '../src/components/errorBoundary/ErrorBoundary';
