@@ -1,7 +1,7 @@
 import React from 'react';
 import { describe, test, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import NotFoundPage from '../../pages/404';
+import NotFoundPage from '../../app/not-found';
 
 describe('NotFoundPage Component', () => {
   test('renders error message and 404 text', () => {
@@ -16,7 +16,7 @@ describe('NotFoundPage Component', () => {
 
     const errorImage = screen.getByAltText('Error Alert');
     expect(errorImage).toBeInTheDocument();
-    expect(errorImage).toHaveAttribute('src', './src/assets/alert.png');
+    expect(errorImage).toHaveAttribute('src', '/assets/alert.png');
   });
 
   test('renders home link', () => {

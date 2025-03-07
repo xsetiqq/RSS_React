@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { store } from '../../src/store/store';
 import ErrorBoundary from '../../src/components/errorBoundary/ErrorBoundary';
-import App from '../../pages/_app';
+import App from '../../app/_app';
 
 const MockComponent = () => <div>Mock Component</div>;
 

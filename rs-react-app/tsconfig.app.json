@@ -24,10 +24,9 @@
   },
   "include": [
     "src",
-    "pages/_app.tsx",
+
     "pages/main.tsx",
-    "pages/404.tsx",
-    "pages/index.tsx",
+
     "src/components/main/RightSectionPage.tsx"
   ]
 }
