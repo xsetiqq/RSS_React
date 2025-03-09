@@ -1,32 +1,41 @@
+import { describe, test, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import Pagination from '../components/main/Pagination';
 
-test('renders page buttons', () => {
-  render(
-    <Pagination
-      countPersons={50}
-      setPageStart={() => {}}
-      currentPage={1}
-      setCurrentPage={() => {}}
-    />
-  );
+describe('Pagination component', () => {
+  test('renders the correct number of pages', () => {
+    render(
+      <Pagination countPersons={25} currentPage={1} setCurrentPage={() => {}} />
+    );
 
-  expect(screen.getByText('1')).toBeInTheDocument();
-  expect(screen.getByText('2')).toBeInTheDocument();
-  expect(screen.getByText('3')).toBeInTheDocument();
-});
+    expect(screen.getAllByRole('button')).toHaveLength(3);
+  });
 
-test('clicking a page button triggers setCurrentPage', () => {
-  const mockSetPage = vi.fn();
-  render(
-    <Pagination
-      countPersons={50}
-      setPageStart={() => {}}
-      currentPage={1}
-      setCurrentPage={mockSetPage}
-    />
-  );
+  test('sets the correct page on button click', () => {
+    const setCurrentPageMock = vi.fn();
 
-  fireEvent.click(screen.getByText('2'));
-  expect(mockSetPage).toHaveBeenCalledWith(2);
+    render(
+      <Pagination
+        countPersons={25}
+        currentPage={1}
+        setCurrentPage={setCurrentPageMock}
+      />
+    );
+
+    const pageButtons = screen.getAllByRole('button');
+
+    fireEvent.click(pageButtons[1]);
+
+    expect(setCurrentPageMock).toHaveBeenCalledWith(2);
+  });
+
+  test('applies the "active" class to the current page', () => {
+    render(
+      <Pagination countPersons={30} currentPage={2} setCurrentPage={() => {}} />
+    );
+
+    const activePage = screen.getByText('2').closest('li');
+
+    expect(activePage?.className).toMatch(/active/);
+  });
 });

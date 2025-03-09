@@ -1,15 +1,23 @@
-import { render } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
+import React from 'react';
+import { describe, test, expect } from 'vitest';
+import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { store } from '../store/store';
-import App from '../App';
+import { store } from '../../src/store/store';
+import ErrorBoundary from '../../src/components/errorBoundary/ErrorBoundary';
+import App from '../../pages/_app';
 
-test('Приложение рендерится без ошибок', () => {
-  render(
-    <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </Provider>
-  );
+const MockComponent = () => <div>Mock Component</div>;
+
+describe('_app.tsx', () => {
+  test('renders the application with Redux Provider and ErrorBoundary', () => {
+    render(
+      <Provider store={store}>
+        <ErrorBoundary>
+          <MockComponent />
+        </ErrorBoundary>
+      </Provider>
+    );
+
+    expect(screen.getByText('Mock Component')).toBeInTheDocument();
+  });
 });

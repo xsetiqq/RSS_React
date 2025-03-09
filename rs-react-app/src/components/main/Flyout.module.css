@@ -15,7 +15,7 @@
   visibility: hidden; 
 }
 
-.flyout.active {
+.active {
   opacity: 1;
   transform: translateX(0);
   visibility: visible;

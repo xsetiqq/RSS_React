@@ -1,5 +1,3 @@
-import './Error404.css';
-
 const NotFoundPage = () => {
   return (
     <div className="error">

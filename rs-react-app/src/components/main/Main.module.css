@@ -1,23 +1,23 @@
+
 .mainContainer {
   width: 100%;
   margin: 0 auto;
 }
-.Names-Description {
+
+.namesDescription { 
   display: flex;
   gap: 10px;
   background-color: rgba(57, 55, 52, 0.863);
   border-radius: 3px;
   padding: 20px;
-
-  display: flex;
-  gap: 20%;
   justify-content: space-around;
 }
-.Items {
+
+.items {
   display: flex;
 }
-.wertical-column {
 
+.werticalColumn { 
   background-color: #181818; 
   width: 100%;
   min-width: 70%;
@@ -28,30 +28,21 @@
   height: auto;
   min-height: 100%; 
 }
+
 .light {
   background-color: #ffffff;
   color: black;
 }
 
-button.light-button {
-  background-color: white;
-  color: black;
-  border: 2px solid black;
-  transition: background 0.3s ease, color 0.3s ease, border 0.3s ease;
-}
 .itemsName {
   display: flex;
   justify-content: space-around;
   width: 100%;
 }
-hr {
-  size: 4;
-  width: 100%;
-}
+
 .item {
   display: flex;
   width: 50%;
   align-items: flex-start;
-  padding-left: 10%;
   gap: 30px;
 }

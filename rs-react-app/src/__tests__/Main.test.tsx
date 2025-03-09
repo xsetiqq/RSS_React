@@ -1,37 +1,18 @@
-import { render, screen } from '@testing-library/react';
+import React from 'react';
+import { describe, test, expect, vi, beforeEach } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
-import Main from '../../src/components/main/Main';
 import selectedItemsReducer from '../../src/store/selectedItemsSlice';
-import { MemoryRouter, useSearchParams } from 'react-router-dom';
-import { apiSlice, useGetPersonDetailsQuery } from '../../src/store/apiSlice';
-import { beforeEach, vi, test } from 'vitest';
+import { useSearchParams } from 'next/navigation';
+import Main from '../../src/components/main/Main';
+import { apiSlice } from '../../src/store/apiSlice';
 
-// Мокаем `useGetPersonDetailsQuery`
-vi.mock('../../src/store/apiSlice', async (importOriginal) => {
-  const actual = await importOriginal();
-  return {
-    ...actual,
-    useGetPersonDetailsQuery: vi.fn(() => ({
-      data: null,
-      isLoading: false,
-      error: null,
-      skip: true,
-    })),
-  };
-});
+vi.mock('next/navigation', () => ({
+  useSearchParams: () => new URLSearchParams('search=test&page=1'),
+}));
 
-// Мокаем `useSearchParams`
-vi.mock('react-router-dom', async (importOriginal) => {
-  const actual = await importOriginal();
-  return {
-    ...actual,
-    useSearchParams: vi.fn(() => [new URLSearchParams(), vi.fn()]),
-  };
-});
-
-// Создаём тестовый store
-const testStore = configureStore({
+const mockStore = configureStore({
   reducer: {
     selectedItems: selectedItemsReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
@@ -40,156 +21,101 @@ const testStore = configureStore({
     getDefaultMiddleware().concat(apiSlice.middleware),
 });
 
-beforeEach(() => {
-  vi.restoreAllMocks(); // Сбрасываем все моки перед каждым тестом
-});
+const mockData = [
+  {
+    url: 'https://swapi.dev/api/people/1/',
+    name: 'Luke Skywalker',
+    height: '172',
+    gender: 'male',
+  },
+  {
+    url: 'https://swapi.dev/api/people/2/',
+    name: 'Darth Vader',
+    height: '202',
+    gender: 'male',
+  },
+];
 
-test('Рендер Main с заголовком "Results"', () => {
-  render(
-    <Provider store={testStore}>
-      <MemoryRouter>
-        <Main data={[]} isLoading={false} isError={false} countPersons={0} />
-      </MemoryRouter>
-    </Provider>
-  );
+const mockGetApiData = vi.fn();
 
-  expect(screen.getByText('Results')).toBeInTheDocument();
-});
-
-test('Рендер спиннера при загрузке', () => {
-  render(
-    <Provider store={testStore}>
-      <MemoryRouter>
-        <Main data={[]} isLoading={true} isError={false} countPersons={0} />
-      </MemoryRouter>
-    </Provider>
-  );
-
-  expect(screen.getByAltText('loading...')).toBeInTheDocument();
-});
-
-test('Рендер списка персонажей', () => {
-  const mockData = [
-    { name: 'Luke Skywalker', height: '172', gender: 'male', url: '1' },
-    { name: 'Darth Vader', height: '202', gender: 'male', url: '2' },
-  ];
-
-  render(
-    <Provider store={testStore}>
-      <MemoryRouter>
-        <Main
-          data={mockData}
-          isLoading={false}
-          isError={false}
-          countPersons={2}
-        />
-      </MemoryRouter>
-    </Provider>
-  );
-
-  expect(screen.getByText('Luke Skywalker')).toBeInTheDocument();
-  expect(screen.getByText('Darth Vader')).toBeInTheDocument();
-});
-
-test('Рендер компонента Error при наличии ошибки', () => {
-  render(
-    <Provider store={testStore}>
-      <MemoryRouter>
-        <Main data={[]} isLoading={false} isError={true} countPersons={0} />
-      </MemoryRouter>
-    </Provider>
-  );
-
-  // Проверяем, что заголовок "Oops! Something went wrong" отображается
-  expect(screen.getByText('Oops! Something went wrong')).toBeInTheDocument();
-
-  // Проверяем, что изображение с alt-текстом "Error Alert" отображается
-  expect(screen.getByAltText('Error Alert')).toBeInTheDocument();
-});
-
-test('Рендер RightSection при наличии detailsId', () => {
-  const mockData = [
-    { name: 'Luke Skywalker', height: '172', gender: 'male', url: '1' },
-  ];
-
-  // Мокаем useSearchParams, чтобы вернуть detailsId
-  vi.mocked(useSearchParams).mockReturnValue([
-    new URLSearchParams('details=1'),
-    vi.fn(),
-  ]);
-
-  // Мокаем useGetPersonDetailsQuery, чтобы вернуть данные
-  vi.mocked(useGetPersonDetailsQuery).mockReturnValue({
-    data: {
-      name: 'Luke Skywalker',
-      gender: 'male',
-      mass: '77',
-      hair_color: 'blond',
-      eye_color: 'blue',
-    },
-    isLoading: false,
-    error: null,
-    skip: false,
+describe('Main component', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
   });
 
-  render(
-    <Provider store={testStore}>
-      <MemoryRouter>
-        <Main
-          data={mockData}
-          isLoading={false}
-          isError={false}
-          countPersons={1}
-        />
-      </MemoryRouter>
-    </Provider>
-  );
+  const renderWithProviders = (component: JSX.Element) =>
+    render(<Provider store={mockStore}>{component}</Provider>);
 
-  // Проверяем, что заголовок "Details" отображается
-  expect(screen.getByText('Details')).toBeInTheDocument();
-
-  // Проверяем, что кнопка закрытия отображается
-  expect(screen.getByText('×')).toBeInTheDocument();
-
-  // Проверяем, что данные персонажа отображаются
-  expect(screen.getByText('Name: Luke Skywalker')).toBeInTheDocument();
-  expect(screen.getByText('Gender: male')).toBeInTheDocument();
-  expect(screen.getByText('Mass: 77')).toBeInTheDocument();
-  expect(screen.getByText('Hair color: blond')).toBeInTheDocument();
-  expect(screen.getByText('Eye color: blue')).toBeInTheDocument();
-});
-
-test('Рендер RightSection без данных', () => {
-  const mockData = [
-    { name: 'Luke Skywalker', height: '172', gender: 'male', url: '1' },
-  ];
-
-  vi.mocked(useSearchParams).mockReturnValue([
-    new URLSearchParams('details=1'),
-    vi.fn(),
-  ]);
-
-  vi.mocked(useGetPersonDetailsQuery).mockReturnValue({
-    data: null,
-    isLoading: false,
-    error: null,
-    skip: false,
+  test('renders loading state', () => {
+    renderWithProviders(
+      <Main
+        data={undefined}
+        isLoading={true}
+        isError={false}
+        countPersons={0}
+        getApiData={mockGetApiData}
+      />
+    );
+    expect(screen.getByAltText('loading...')).toBeInTheDocument();
   });
 
-  render(
-    <Provider store={testStore}>
-      <MemoryRouter>
-        <Main
-          data={mockData}
-          isLoading={false}
-          isError={false}
-          countPersons={1}
-        />
-      </MemoryRouter>
-    </Provider>
-  );
+  test('renders error component on error state', () => {
+    renderWithProviders(
+      <Main
+        data={undefined}
+        isLoading={false}
+        isError={true}
+        countPersons={0}
+        getApiData={mockGetApiData}
+      />
+    );
 
-  expect(screen.getByText('Details')).toBeInTheDocument();
+    expect(screen.getByText(/Oops! Something went wrong/i)).toBeInTheDocument();
+  });
 
-  expect(screen.getByText('No data available')).toBeInTheDocument();
+  test('renders person list', () => {
+    renderWithProviders(
+      <Main
+        data={mockData}
+        isLoading={false}
+        isError={false}
+        countPersons={2}
+        getApiData={mockGetApiData}
+      />
+    );
+    expect(screen.getByText('Luke Skywalker')).toBeInTheDocument();
+    expect(screen.getByText('Darth Vader')).toBeInTheDocument();
+  });
+
+  test('dispatches action when checkbox is clicked', () => {
+    renderWithProviders(
+      <Main
+        data={mockData}
+        isLoading={false}
+        isError={false}
+        countPersons={2}
+        getApiData={mockGetApiData}
+      />
+    );
+    const checkbox = screen.getAllByRole('checkbox')[0];
+    fireEvent.click(checkbox);
+    expect(checkbox).toBeChecked();
+  });
+
+  test('changes URL and opens details on item click', () => {
+    renderWithProviders(
+      <Main
+        data={mockData}
+        isLoading={false}
+        isError={false}
+        countPersons={2}
+        getApiData={mockGetApiData}
+      />
+    );
+
+    const person = screen.getByText('Luke Skywalker');
+    fireEvent.click(person);
+
+    expect(window.location.search).toContain('details=1');
+  });
 });

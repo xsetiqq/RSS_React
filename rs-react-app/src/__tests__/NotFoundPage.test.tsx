@@ -1,11 +1,29 @@
+import React from 'react';
+import { describe, test, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import NotFoundPage from '../pages/NotFoundPage';
-import { expect, test } from 'vitest';
+import NotFoundPage from '../../pages/404';
 
-test('renders NotFoundPage', () => {
-  render(<NotFoundPage />);
+describe('NotFoundPage Component', () => {
+  test('renders error message and 404 text', () => {
+    render(<NotFoundPage />);
 
-  expect(screen.getByText(/error 404/i)).toBeInTheDocument();
+    expect(screen.getByText('Oops! Something went wrong.')).toBeInTheDocument();
+    expect(screen.getByText('Error 404')).toBeInTheDocument();
+  });
 
-  expect(screen.getByRole('link', { name: /home/i })).toBeInTheDocument();
+  test('renders error image', () => {
+    render(<NotFoundPage />);
+
+    const errorImage = screen.getByAltText('Error Alert');
+    expect(errorImage).toBeInTheDocument();
+    expect(errorImage).toHaveAttribute('src', './src/assets/alert.png');
+  });
+
+  test('renders home link', () => {
+    render(<NotFoundPage />);
+
+    const homeLink = screen.getByRole('link', { name: /home/i });
+    expect(homeLink).toBeInTheDocument();
+    expect(homeLink).toHaveAttribute('href', '/');
+  });
 });

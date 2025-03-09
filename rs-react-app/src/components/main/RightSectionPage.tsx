@@ -1,6 +1,6 @@
-import { useSearchParams } from 'react-router-dom';
-import './RightSectionPage.css';
-import { DetailPerson } from '../models/person';
+'use client';
+import styles from './RightSectionPage.module.css';
+import { DetailPerson } from '../../models/person';
 
 type MyProps = {
   detailData: DetailPerson | undefined;
@@ -8,18 +8,19 @@ type MyProps = {
 };
 
 const RightSection = ({ detailData, isDetailLoading }: MyProps) => {
-  const [searchParams, setSearchParams] = useSearchParams();
-
   const closeDetails = () => {
-    const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.delete('details');
-    setSearchParams(newSearchParams);
+    const currentParams = new URLSearchParams(window.location.search);
+    currentParams.delete('details');
+
+    window.history.pushState({}, '', `?${currentParams.toString()}`);
+
+    window.dispatchEvent(new PopStateEvent('popstate'));
   };
 
   if (isDetailLoading) {
     return (
-      <div className="right-section">
-        <button className="close-btn" onClick={closeDetails}>
+      <div className={styles.rightSection}>
+        <button className={styles.closeBtn} onClick={closeDetails}>
           ×
         </button>
         <h2>Details</h2>
@@ -30,8 +31,8 @@ const RightSection = ({ detailData, isDetailLoading }: MyProps) => {
 
   if (!detailData) {
     return (
-      <div className="right-section">
-        <button className="close-btn" onClick={closeDetails}>
+      <div className={styles.rightSection}>
+        <button className={styles.closeBtn} onClick={closeDetails}>
           ×
         </button>
         <h2>Details</h2>
@@ -41,12 +42,12 @@ const RightSection = ({ detailData, isDetailLoading }: MyProps) => {
   }
 
   return (
-    <div className="right-section">
-      <button className="close-btn" onClick={closeDetails}>
+    <div className={styles.rightSection}>
+      <button className={styles.closeBtn} onClick={closeDetails}>
         ×
       </button>
       <h2>Details</h2>
-      <div>
+      <div className={styles.detailsContent}>
         <p>{`Name: ${detailData.name}`}</p>
         <p>{`Gender: ${detailData.gender}`}</p>
         <p>{`Mass: ${detailData.mass}`}</p>

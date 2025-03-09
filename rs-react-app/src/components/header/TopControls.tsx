@@ -1,39 +1,51 @@
-import { ChangeEvent, useEffect, useState } from 'react';
-import './TopControls.css';
+'use client';
+import { useState, useEffect } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import styles from './TopControls.module.css';
 
 interface TopControlsProps {
-  getApiData: (newSearchTerm: string) => void;
-  setPageStart: () => void;
+  getApiData: (params: { searchTerm: string; page: number }) => void;
 }
 
-const Topcontrols = ({ getApiData }: TopControlsProps) => {
-  const lastQuery = localStorage.getItem('lastSearch') || '';
-  const [query, setQuery] = useState(lastQuery);
+const TopControls = ({ getApiData }: TopControlsProps) => {
+  const [query, setQuery] = useState('');
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
-    getApiData(lastQuery);
-  }, [getApiData, lastQuery]);
+    const storedQuery = localStorage.getItem('lastSearch') || '';
+    setQuery(storedQuery);
 
-  const handleSearch = (): void => {
+    const currentPage = Number(searchParams.get('page')) || 1;
+    if (storedQuery) {
+      getApiData({ searchTerm: storedQuery, page: currentPage });
+    }
+  }, []);
+
+  const handleSearch = () => {
     if (query.trim() === '') return;
-    localStorage.setItem('lastSearch', query);
-    getApiData(query);
-  };
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    setQuery(event.target.value);
+    localStorage.setItem('lastSearch', query);
+
+    const params = new URLSearchParams(window.location.search);
+    params.set('search', query);
+    params.set('page', '1');
+
+    router.push(`?${params.toString()}`);
+
+    getApiData({ searchTerm: query, page: 1 });
   };
 
   return (
-    <div className="container">
-      <h2>Top controls</h2>
-      <div className="TopControls">
+    <div className={styles.container}>
+      <h2>Top Controls</h2>
+      <div className={styles.topControls}>
         <input
           type="search"
           value={query}
-          onChange={handleChange}
+          onChange={(e) => setQuery(e.target.value)}
           placeholder="Search"
-          className="search-input"
+          className={styles.searchInput}
         />
         <button onClick={handleSearch}>Search</button>
       </div>
@@ -41,4 +53,4 @@ const Topcontrols = ({ getApiData }: TopControlsProps) => {
   );
 };
 
-export default Topcontrols;
+export default TopControls;
