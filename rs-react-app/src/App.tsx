@@ -1,35 +1,25 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import Homepage from './pages/Homepage';
+import ReactHookForm from './pages/ReactHookForm';
+import UncontrolledForm from './pages/UncontrolledForm';
 import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0);
-
+export default function App() {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank" rel="noreferrer">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank" rel="noreferrer">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <Router>
+      <div style={{ textAlign: 'center' }}>
+        <h1>
+          <Link to="/" className="HeaderLinkText">
+            React forms
+          </Link>
+        </h1>
+        <hr />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+      <Routes>
+        <Route path="/" element={<Homepage />} />
+        <Route path="/react-hook-form" element={<ReactHookForm />} />
+        <Route path="/uncontrolled-form" element={<UncontrolledForm />} />
+      </Routes>
+    </Router>
   );
 }
-
-export default App;

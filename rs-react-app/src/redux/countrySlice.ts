@@ -1,0 +1,55 @@
+import { createSlice } from '@reduxjs/toolkit';
+
+const initialState = {
+  countries: [
+    'Russia',
+    'USA',
+    'Germany',
+    'France',
+    'Canada',
+    'China',
+    'India',
+    'Japan',
+    'Ukraine',
+    'Poland',
+    'Spain',
+    'Italy',
+    'United Kingdom',
+    'Brazil',
+    'Mexico',
+    'Belarus',
+    'Austria',
+    'Belgium',
+    'Bulgaria',
+    'Croatia',
+    'Cyprus',
+    'Czech Republic',
+    'Denmark',
+    'Estonia',
+    'Finland',
+    'Greece',
+    'Hungary',
+    'Iceland',
+    'Ireland',
+    'Latvia',
+    'Lithuania',
+    'Luxembourg',
+    'Malta',
+    'Netherlands',
+    'Norway',
+    'Portugal',
+    'Romania',
+    'Slovakia',
+    'Slovenia',
+    'Sweden',
+    'Switzerland',
+  ],
+};
+
+const countrySlice = createSlice({
+  name: 'countries',
+  initialState,
+  reducers: {},
+});
+
+export default countrySlice.reducer;
