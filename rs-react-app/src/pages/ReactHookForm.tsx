@@ -56,7 +56,7 @@ const schema: yup.ObjectSchema<FormData> = yup.object().shape({
   country: yup.string().required('Select a country.'),
   picture: yup
     .mixed<FileList>()
-    .test('fileSize', 'The file is too large (max. 2MB).', (value) => {
+    .test('fileSize', 'Please upload a file no larger than 2 MB.', (value) => {
       if (!value || !(value as FileList).length) return false;
       return (value as FileList)[0].size <= 2 * 1024 * 1024;
     })
@@ -77,7 +77,7 @@ const HookFormPage: React.FC = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm<FormData>({
     resolver: yupResolver(schema),
     mode: 'onChange',
@@ -188,8 +188,8 @@ const HookFormPage: React.FC = () => {
 
         <button
           type="submit"
-          className={`${styles['submit-btn']} ${isValid ? styles.valid : ''}`}
-          disabled={!isValid}
+          className={`${styles['submit-btn']} ${Object.keys(errors).length === 0 ? styles.valid : ''}`}
+          disabled={Object.keys(errors).length > 0}
         >
           Submit
         </button>

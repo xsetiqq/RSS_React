@@ -93,11 +93,11 @@
   cursor: not-allowed;
 }
 
+
 .submit-btn.valid {
   background-color: #4CAF50;
   color: white;
 }
-
 
 .submit-btn.valid:hover {
   background-color: #45a049;
