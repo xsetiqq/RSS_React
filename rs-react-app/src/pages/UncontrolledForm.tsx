@@ -117,8 +117,14 @@ const UncontrolledFormPage: React.FC = () => {
     navigate('/');
   };
 
+  const onBack = () => {
+    navigate(-1);
+  };
   return (
     <div className={styles['form-container']}>
+      <div onClick={onBack} className={styles.buttonBack}>
+        ✖
+      </div>
       <h2>Uncontrolled Form</h2>
       {error && <p className={styles['error-message']}>{error}</p>}
       <form onSubmit={handleSubmit}>

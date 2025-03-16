@@ -6,7 +6,6 @@ import styles from '../styles/Homepage.module.css';
 
 export default function Homepage() {
   const users = useSelector((state: RootState) => state.form.users);
-
   return (
     <div className={styles.homeContainer}>
       <h2>Welcome to the home page!</h2>

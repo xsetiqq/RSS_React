@@ -62,7 +62,8 @@
 .checkbox-group {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 10px; 
+  padding-bottom: 13px;
 }
 
 .checkbox-group input {
@@ -105,4 +106,13 @@
 
 .submit-btn.valid:active {
   transform: scale(0.98);
+}
+
+.buttonBack {
+  text-align: end;
+  cursor: pointer;
+}
+h2 {
+      margin-top: 0px;
+
 }

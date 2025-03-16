@@ -98,9 +98,14 @@ const HookFormPage: React.FC = () => {
       navigate('/');
     }
   };
-
+  const onBack = () => {
+    navigate(-1);
+  };
   return (
     <div className={styles['form-container']}>
+      <div onClick={onBack} className={styles.buttonBack}>
+        ✖
+      </div>
       <h2>React Hook Form</h2>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className={styles['form-group']}>
