@@ -1,54 +1,66 @@
-# React + TypeScript + Vite
+# React Countries App — Performance Profiling
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project fetches country data from the REST Countries API and displays it with filtering, sorting, and visited countries tracking. This README documents performance profiling results **before and after optimization**.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🔎 Initial Profiling — Before Optimization
 
-## Expanding the ESLint configuration
+**Action**:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Filter: Region "Europe"
+- Search: "fr"
+- Sort: Population (asc)
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+**Results:**
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- Commit Duration: **2.5ms**
+- CountryList render time: **0.5ms**
+- CountryCard renders: ~10 components, total ~1ms
+- Interaction Triggered: `CountryList`
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+**Screenshots**:
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+- ![Flame Graph Before](./screenshots/flame-before.png)
+- ![Ranked Chart Before](./screenshots/ranked-before.png)
+
+---
+
+## 🚀 After Optimization
+
+**Optimizations applied**:
+
+- `React.memo` on CountryCard, SearchAndFilter, Pagination.
+- `useMemo` for filtering, sorting, pagination logic.
+- `useCallback` for event handlers.
+
+**Action**: Same as above.
+
+**Results:**
+
+- Commit Duration: **2.4ms**
+- CountryList render time: **0.3ms**
+- CountryCard (Memo) renders: only relevant cards rendered, each <0.1ms
+- Interaction Triggered: `CountryList`
+
+**Screenshots**:
+
+- ![Flame Graph After](./screenshots/flame-after.png)
+- ![Ranked Chart After](./screenshots/ranked-after.png)
+
+---
+
+## 🔄 Comparison Table
+
+| Metric                    | Before         | After           |
+| ------------------------- | -------------- | --------------- |
+| Commit Duration           | 2.5ms          | 2.4ms           |
+| CountryList render time   | 0.5ms          | 0.3ms           |
+| CountryCard total renders | ~10 components | only few (Memo) |
+| Triggered By              | CountryList    | CountryList     |
+
+---
+
+## ✅ Conclusion
+
+After applying `React.memo`, `useMemo`, and `useCallback`, the application reduced unnecessary renders, especially for `CountryCard`, improving efficiency with larger datasets and faster UI interactions.
