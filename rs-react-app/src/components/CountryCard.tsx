@@ -17,7 +17,7 @@ const CountryCard: React.FC<Props> = ({ country, visited, toggleVisited }) => {
     <div
       className={styles.card}
       onClick={() => toggleVisited(country.cca3)}
-      style={{ backgroundColor: visited ? '#e0f7fa' : '#fff' }}
+      style={{ backgroundColor: visited ? '#e0f7fa' : '#e7e7e7' }}
     >
       <div className={styles.left}>
         <img

@@ -1,4 +1,3 @@
-// src/components/SearchAndFilter.tsx
 import React from 'react';
 import styles from './SearchAndFilter.module.css';
 

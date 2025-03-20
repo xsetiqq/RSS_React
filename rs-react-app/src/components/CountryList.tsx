@@ -1,10 +1,8 @@
-// src/components/CountryList.tsx
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useGetAllCountriesQuery } from '../api/countriesApi';
 import useVisitedCountries from '../hooks/useVisitedCountries';
 import CountryCard from './CountryCard';
 import SearchAndFilter from './SearchAndFilter';
-import { Country } from '../api/types';
 import Pagination from './Pagination';
 
 const CountryList = () => {
@@ -16,16 +14,13 @@ const CountryList = () => {
   const [sortField, setSortField] = useState<'name' | 'population'>('name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
-  // Пагинация
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  // Сброс страницы при смене фильтров/поиска/сортировки
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, selectedRegion, sortField, sortOrder]);
 
-  // Обработчики
   const handleSearch = useCallback((term: string) => {
     setSearchTerm(term);
   }, []);
@@ -54,7 +49,6 @@ const CountryList = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
 
-  // Фильтрация, поиск, сортировка
   const filteredCountries = useMemo(() => {
     if (!countries) return [];
 
@@ -83,7 +77,6 @@ const CountryList = () => {
     return result;
   }, [countries, searchTerm, selectedRegion, sortField, sortOrder]);
 
-  // Пагинация
   const totalPages = Math.ceil(filteredCountries.length / itemsPerPage);
 
   const paginatedCountries = useMemo(() => {
@@ -92,9 +85,8 @@ const CountryList = () => {
     return filteredCountries.slice(startIndex, endIndex);
   }, [filteredCountries, currentPage]);
 
-  // UI
   if (isLoading) return <p>Loading countries...</p>;
-  if (error) return <p>Failed to load countries.</p>;
+  if (error) return <h4>Failed to load countries ❌</h4>;
 
   return (
     <div>
@@ -107,22 +99,32 @@ const CountryList = () => {
         sortOrder={sortOrder}
         onSortChange={handleSortChange}
       />
+      {filteredCountries.length === 0 ? (
+        <p
+          style={{ textAlign: 'center', marginTop: '20px', fontSize: '1.1rem' }}
+        >
+          No countries found matching your criteria.
+        </p>
+      ) : (
+        <>
+          {paginatedCountries.map((country) => (
+            <CountryCard
+              key={country.cca3}
+              country={country}
+              visited={visitedCountries.includes(country.cca3)}
+              toggleVisited={toggleVisited}
+            />
+          ))}
 
-      {paginatedCountries.map((country: Country) => (
-        <CountryCard
-          key={country.cca3}
-          country={country}
-          visited={visitedCountries.includes(country.cca3)}
-          toggleVisited={toggleVisited}
-        />
-      ))}
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        goToPage={goToPage}
-        prevPage={prevPage}
-        nextPage={nextPage}
-      />
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            goToPage={goToPage}
+            prevPage={prevPage}
+            nextPage={nextPage}
+          />
+        </>
+      )}
     </div>
   );
 };
