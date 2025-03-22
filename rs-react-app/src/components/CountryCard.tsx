@@ -16,7 +16,6 @@ const CountryCard: React.FC<Props> = ({ country, visited, toggleVisited }) => {
   return (
     <div
       className={styles.card}
-      onClick={() => toggleVisited(country.cca3)}
       style={{ backgroundColor: visited ? '#e0f7fa' : '#e7e7e7' }}
     >
       <div className={styles.left}>
@@ -34,16 +33,24 @@ const CountryCard: React.FC<Props> = ({ country, visited, toggleVisited }) => {
           </span>
         </div>
       </div>
-
-      <a
-        href={googleMapsUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={styles.mapButton}
-        onClick={(e) => e.stopPropagation()}
-      >
-        View on Google Maps
-      </a>
+      <div className={styles.buttons}>
+        {' '}
+        <button
+          onClick={() => toggleVisited(country.cca3)}
+          className={styles.visitButton}
+        >
+          {visited ? 'Unmark Visited ' : 'Mark as Visited '}
+        </button>
+        <a
+          href={googleMapsUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={styles.mapButton}
+          onClick={(e) => e.stopPropagation()}
+        >
+          View on Google Maps
+        </a>
+      </div>
     </div>
   );
 };

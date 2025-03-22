@@ -85,7 +85,23 @@ const CountryList = () => {
     return filteredCountries.slice(startIndex, endIndex);
   }, [filteredCountries, currentPage]);
 
-  if (isLoading) return <p>Loading countries...</p>;
+  if (isLoading)
+    return (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '50vh',
+        }}
+      >
+        <img
+          style={{ width: '50px', height: '50px' }}
+          src="./src/assets/loading.svg"
+          alt="loading..."
+        />
+      </div>
+    );
   if (error) return <h4>Failed to load countries ❌</h4>;
 
   return (
