@@ -1,0 +1,22 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #dbe6f5;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+      text-align: center;
+    margin-bottom: 24px;
+    padding: 12px;
+    padding-right: 200px;
+    padding-left: 200px;
+    background-color: #e7e7e7;
+    /* border-radius: 20px; */
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
